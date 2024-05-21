@@ -1,0 +1,32 @@
+.primeirolugar {
+    color: gold;
+    font-size: xx-large;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .segundolugar {
+    color: silver;
+    font-size: xx-large;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .terceirolugar {
+    color: Brown ;
+    font-size: xx-large;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  footer {
+    background-color: var(--clr-card);
+    transition: var(--transition);
+    font: var(--ts-normal-semibold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 19rem;
+    text-align: center;
+  }
+  /* styles.css */
+h1 {
+  text-align: center;
+  margin-top: 20px; /* Ajuste o valor conforme necessário */
+}
