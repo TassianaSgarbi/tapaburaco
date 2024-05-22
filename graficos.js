@@ -1,74 +1,142 @@
-// Chamada da função para atualizar o gráfico dos últimos 30 dias
-atualizargrafico30();
-
-// Definição das opções do gráfico de donut
-var optionsDonut = {
-    series: [44, 55, 41, 17, 15],
-    chart: {
-        type: 'donut',
-    },
-    responsive: [{
-        breakpoint: 480,
-        options: {
-            chart: {
-                width: 200
-            },
-            legend: {
-                position: 'bottom'
-            }
-        }
-    }]
-};
-
-// Renderização do gráfico de donut
-var chartDonut = new ApexCharts(document.querySelector("#grafico_percentual"), optionsDonut);
-chartDonut.render();
-
-// Definição das opções do gráfico de barras
-var optionsBar = {
-    series: [{
-        name: 'Net Profit',
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 80, 33]
-    }],
-    chart: {
-        type: 'bar',
-        height: 350
-    },
-    plotOptions: {
-        bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
+// Funções para inicializar os gráficos
+function atualizargrafico30() {
+    var options = {
+        series: [{
+            name: 'Net Profit',
+            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+        }],
+        chart: {
+            type: 'bar',
+            height: 350
         },
-    },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-    },
-    xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-    },
-    yaxis: {
-        title: {
-            text: '$ (thousands)'
-        }
-    },
-    fill: {
-        opacity: 1
-    },
-    tooltip: {
-        y: {
-            formatter: function (val) {
-                return "$ " + val + " thousands"
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        xaxis: {
+            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+                '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+        },
+        yaxis: {
+            title: {
+                text: '$ (thousands)'
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return "$ " + val + " thousands"
+                }
             }
         }
-    }
-};
+    };
 
-// Renderização do gráfico de barras
-var chartBar = new ApexCharts(document.querySelector("#execução_anual"), optionsBar);
-chartBar.render();
+    var chart = new ApexCharts(document.querySelector("#executadas_ultimos_30_dias"), options);
+    chart.render();
+}
+
+function grafico_percentual() {
+    var total = totalDemandas;
+    var abertas = demandasAbertas;
+    var vistoriadas = demandasVistoriadas;
+    var executadas = demandasExecutadas;
+
+    var percentuais = [
+        (abertas / total) * 100,
+        (vistoriadas / total) * 100,
+        (executadas / total) * 100
+    ];
+
+    var options = {
+        series: percentuais,
+        chart: {
+            type: 'donut',
+        },
+        labels: [],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+
+    var chart = new ApexCharts(document.querySelector("#grafico_percentual"), options);
+    chart.render();
+}
+
+
+function execucao_anual() {
+    var options = {
+        series: [{
+            name: 'Net Profit',
+            data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 80, 33]
+        }],
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        },
+        yaxis: {
+            title: {
+                text: '$ (thousands)'
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return "$ " + val + " thousands"
+                }
+            }
+        }
+    };
+    var chart = new ApexCharts(document.querySelector("#execucao_anual"), options);
+    chart.render();
+}
+
+// Inicialize os gráficos quando o documento estiver carregado
+document.addEventListener('DOMContentLoaded', function () {
+    atualizargrafico30();
+    grafico_percentual();
+    execucao_anual();
+});
