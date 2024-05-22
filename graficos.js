@@ -1,60 +1,82 @@
 // Funções para inicializar os gráficos
-function atualizargrafico30() {
-    var options = {
-        series: [{
-            name: 'Net Profit',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }],
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
+async function atualizargrafico30() {
+    try {
+        const response = await fetch('dados_grafico.php');
+        const data = await response.json();
+
+        // Inicializa as categorias de dias e a quantidade inicial como zero
+        const dias = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+        const quantidades = Array(31).fill(0);
+
+        // Preenche os dados de quantidade com base na resposta do PHP
+        data.forEach(item => {
+            quantidades[item.Dia - 1] = item.Quantidade;
+        });
+
+        var options = {
+            series: [{
+                name: 'Demandas Executadas',
+                data: quantidades
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
             },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-                '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
-                '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
-            title: {
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function(val) {
+                    return val.toFixed(0); // Mostra o valor como inteiro
+                },
+                offsetY: -20,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#304758"]
+                }
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: dias,
+                title: {
                     text: 'Dia'
                 }
-        },
-        yaxis: {
-            title: {
-                text: 'Quantidade'
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return "$ " + val + " thousands"
+            },
+            yaxis: {
+                title: {
+                    text: 'Quantidade'
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + " demandas";
+                    }
                 }
             }
-        }
-    };
+        };
 
-    var chart = new ApexCharts(document.querySelector("#executadas_ultimos_30_dias"), options);
-    chart.render();
+        var chart = new ApexCharts(document.querySelector("#executadas_ultimos_30_dias"), options);
+        chart.render();
+    } catch (error) {
+        console.error('Erro ao obter os dados do gráfico:', error);
+    }
 }
 
-function grafico_percentual(totalDemandas,demandasAbertas,demandasVistoriadas,demandasExecutadas) { 
-    
+
+function grafico_percentual(totalDemandas, demandasAbertas, demandasVistoriadas, demandasExecutadas) {
     var total = totalDemandas;
     var abertas = demandasAbertas;
     var vistoriadas = demandasVistoriadas;
@@ -73,7 +95,7 @@ function grafico_percentual(totalDemandas,demandasAbertas,demandasVistoriadas,de
         },
         theme: {
             palette: 'palette2' // upto palette10
-          },
+        },
         labels: ['Demandas Abertas', 'Demandas Vistoriadas', 'Demandas Executadas'],
         responsive: [{
             breakpoint: 480,
@@ -92,11 +114,10 @@ function grafico_percentual(totalDemandas,demandasAbertas,demandasVistoriadas,de
     chart.render();
 }
 
-
 function execucao_anual() {
     var options = {
         series: [{
-            name: 'Net Profit',
+            name: '',
             data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 80, 33]
         }],
         chart: {
@@ -111,7 +132,15 @@ function execucao_anual() {
             },
         },
         dataLabels: {
-            enabled: false
+            enabled: true,
+            formatter: function(val) {
+                return val.toFixed(0); // Mostra o valor como inteiro
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ["#304758"]
+            }
         },
         stroke: {
             show: true,
@@ -120,10 +149,13 @@ function execucao_anual() {
         },
         xaxis: {
             categories: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        },
+            title: {
+                text: 'Mês'
+        }
+    },
         yaxis: {
             title: {
-                text: '$ (thousands)'
+                text: 'Quantidade'
             }
         },
         fill: {
@@ -131,8 +163,8 @@ function execucao_anual() {
         },
         tooltip: {
             y: {
-                formatter: function (val) {
-                    return "$ " + val + " thousands"
+                formatter: function(val) {
+                    return "" + val + "  demandas";
                 }
             }
         }
@@ -141,9 +173,9 @@ function execucao_anual() {
     chart.render();
 }
 
+
 // Inicialize os gráficos quando o documento estiver carregado
 document.addEventListener('DOMContentLoaded', function () {
     atualizargrafico30();
-    grafico_percentual();
     execucao_anual();
 });

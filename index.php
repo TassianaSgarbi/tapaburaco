@@ -7,7 +7,6 @@
     <title>Serviço Tapa Buraco</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
 </head>
 
 <body>
@@ -52,26 +51,24 @@
             <h3>Demandas Executadas</h3>
         </div>
     </div>
-
-    
-
-
     <div class="row">
-        <div class="col-lg-9" id="executadas_ultimos_30_dias">
+        <div class="col-lg-9">
             <h3>Executadas nos últimos 30 dias</h3>
+            <div id="executadas_ultimos_30_dias"></div>
         </div>
 
-        <div class="col-lg-3" ><h3>Grafico Percentual</h3> 
+        <div class="col-lg-3">
+            <h3>Gráfico Percentual</h3>
             <div id="grafico_percentual"></div>
-           </div>
+        </div>
     </div>
     
     <div class="row">
         <div class="col-lg-9" id="execucao_anual">
-            <h3>Executadas no Ano</h3>
-        </div>
-        
-        
+        <h3>Executadas no Ano</h3>
+    </div>
+
+
         <div class="col-lg-3">
             <?php include 'top3.php'; ?>
         </div>
@@ -84,6 +81,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
     <script src="graficos.js"></script>
     
     <script>
@@ -97,15 +95,15 @@
                     document.getElementById('demandasAbertas').innerText = data.demandasAbertas;
                     document.getElementById('demandasVistoriadas').innerText = data.demandasVistoriadas;
                     document.getElementById('demandasExecutadas').innerText = data.demandasExecutadas;
-                    grafico_percentual(data.totalDemandas,data.demandasAbertas,data.demandasVistoriadas,data.demandasExecutadas);
+                    grafico_percentual(data.totalDemandas, data.demandasAbertas, data.demandasVistoriadas, data.demandasExecutadas);
                 })
                 .catch(error => console.error('Error:', error));
         }
-        document.addEventListener('DOMContentLoaded', function() {
-        fetchData('Santos');
-        });
 
-        </script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchData('Santos');
+        });
+    </script>
 </body>
 
 </html>
