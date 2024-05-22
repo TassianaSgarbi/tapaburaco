@@ -28,10 +28,13 @@ function atualizargrafico30() {
             categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
                 '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
                 '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+            title: {
+                    text: 'Dia'
+                }
         },
         yaxis: {
             title: {
-                text: '$ (thousands)'
+                text: 'Quantidade'
             }
         },
         fill: {
@@ -50,7 +53,8 @@ function atualizargrafico30() {
     chart.render();
 }
 
-function grafico_percentual() {
+function grafico_percentual(totalDemandas,demandasAbertas,demandasVistoriadas,demandasExecutadas) { 
+    
     var total = totalDemandas;
     var abertas = demandasAbertas;
     var vistoriadas = demandasVistoriadas;
@@ -61,13 +65,16 @@ function grafico_percentual() {
         (vistoriadas / total) * 100,
         (executadas / total) * 100
     ];
-
+    console.log(percentuais)
     var options = {
         series: percentuais,
         chart: {
             type: 'donut',
         },
-        labels: [],
+        theme: {
+            palette: 'palette2' // upto palette10
+          },
+        labels: ['Demandas Abertas', 'Demandas Vistoriadas', 'Demandas Executadas'],
         responsive: [{
             breakpoint: 480,
             options: {

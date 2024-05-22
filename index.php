@@ -7,7 +7,7 @@
     <title>Serviço Tapa Buraco</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
 </head>
 
 <body>
@@ -55,31 +55,15 @@
 
     
 
-    <script>
-        function fetchData(zone) {
-            fetch('fetchData.php?zone=' + encodeURIComponent(zone))
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('totalDemandas').innerText = data.totalDemandas;
-                    document.getElementById('demandasAbertas').innerText = data.demandasAbertas;
-                    document.getElementById('demandasVistoriadas').innerText = data.demandasVistoriadas;
-                    document.getElementById('demandasExecutadas').innerText = data.demandasExecutadas;
-                    grafico_percentual(data);
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        </script>
-
 
     <div class="row">
         <div class="col-lg-9" id="executadas_ultimos_30_dias">
             <h3>Executadas nos últimos 30 dias</h3>
         </div>
 
-        <div class="col-lg-3" id="grafico_percentual">
-        <h3>Grafico Percentual</h3>
-        </div>
+        <div class="col-lg-3" ><h3>Grafico Percentual</h3> 
+            <div id="grafico_percentual"></div>
+           </div>
     </div>
     
     <div class="row">
@@ -99,9 +83,29 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="graficos.js"></script>
     
-  
+    <script>
+        function fetchData(zone) {
+            fetch('fetchData.php?zone=' + encodeURIComponent(zone))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('grafico_percentual').innerHTML = '';
+                    console.log(data);
+                    document.getElementById('totalDemandas').innerText = data.totalDemandas;
+                    document.getElementById('demandasAbertas').innerText = data.demandasAbertas;
+                    document.getElementById('demandasVistoriadas').innerText = data.demandasVistoriadas;
+                    document.getElementById('demandasExecutadas').innerText = data.demandasExecutadas;
+                    grafico_percentual(data.totalDemandas,data.demandasAbertas,data.demandasVistoriadas,data.demandasExecutadas);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+        fetchData('Santos');
+        });
+
+        </script>
 </body>
 
 </html>
