@@ -1,22 +1,25 @@
 // Funções para inicializar os gráficos
-async function atualizargrafico30() {
-    try {
-        const response = await fetch('dados_grafico.php');
+async function atualizargrafico30(zona) {
+    try { 
+        const response = await fetch('dados_grafico.php?zone='+ zona);
         const data = await response.json();
 
         // Inicializa as categorias de dias e a quantidade inicial como zero
-        const dias = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-        const quantidades = Array(31).fill(0);
+        const dias = Array();
+        // const quantidades = Array(31).fill(0);
+        const qtde = Array();
 
         // Preenche os dados de quantidade com base na resposta do PHP
         data.forEach(item => {
-            quantidades[item.Dia - 1] = item.Quantidade;
+            // quantidades[item.qtde - 1] = item.Quantidade;
+            qtde.push(item.qtde);
+            dias.push(item.DATA);
         });
 
         var options = {
             series: [{
                 name: 'Demandas Executadas',
-                data: quantidades
+                data: qtde
             }],
             chart: {
                 type: 'bar',
@@ -54,7 +57,8 @@ async function atualizargrafico30() {
             yaxis: {
                 title: {
                     text: 'Quantidade'
-                }
+                },
+                tickAmount: "dataPoints"
             },
             fill: {
                 opacity: 1
@@ -176,6 +180,6 @@ function execucao_anual() {
 
 // Inicialize os gráficos quando o documento estiver carregado
 document.addEventListener('DOMContentLoaded', function () {
-    atualizargrafico30();
+    // atualizargrafico30();
     execucao_anual();
 });

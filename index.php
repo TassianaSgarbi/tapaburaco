@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -11,10 +10,14 @@
 
 <body>
     <h1>Serviço Tapa Buraco</h1>
-
+    <span id = "alert"></span>
+    <!-- <select name="" id="" onchange="fetchData(this.value)">
+        <option value="Santos">Santos</option>        
+        <option value="Zona da Orla e intermediária">Zona da Orla e intermediária</option>
+    </select> -->
     <div class="row">
         <div class="col-lg-2 shadow p-3 mb-5 bg-body-tertiary rounded">
-            <button onclick="fetchData('Santos')">Santos</button>
+            <button onclick="fetchData('Santos');">Santos</button>
         </div>
         <div class="col-lg-2 shadow p-3 mb-5 bg-body-tertiary rounded">
             <button onclick="fetchData('Zona da Orla e intermediária')">Zona da Orla e intermediária</button>
@@ -86,6 +89,7 @@
     
     <script>
         function fetchData(zone) {
+            
             fetch('fetchData.php?zone=' + encodeURIComponent(zone))
                 .then(response => response.json())
                 .then(data => {
@@ -96,10 +100,14 @@
                     document.getElementById('demandasVistoriadas').innerText = data.demandasVistoriadas;
                     document.getElementById('demandasExecutadas').innerText = data.demandasExecutadas;
                     grafico_percentual(data.totalDemandas, data.demandasAbertas, data.demandasVistoriadas, data.demandasExecutadas);
+                    document.getElementById('alert').innerHTML = zone;
+                    atualizargrafico30(zone);
+                 
                 })
                 .catch(error => console.error('Error:', error));
         }
 
+       
         document.addEventListener('DOMContentLoaded', function() {
             fetchData('Santos');
         });
