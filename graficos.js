@@ -207,7 +207,7 @@ function fetchData(zone) {
         .then(data => {
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none'; // Ocultar loading
-            }, 2000);
+            }, 500);
             
             document.getElementById('totalDemandas').innerText = data.totalDemandas;
             document.getElementById('demandasAbertas').innerText = data.demandasAbertas;
