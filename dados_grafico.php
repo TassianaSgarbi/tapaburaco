@@ -25,6 +25,25 @@ if ($dataType == '30days') {
     } else {
         $sql = "SELECT COUNT(*) AS qtde, MONTH(DATA) AS mes FROM `solicitacao_de_demandas` WHERE YEAR(DATA) = YEAR(CURDATE()) AND ZONAS = '" . $conn->real_escape_string($zone) . "' GROUP BY mes;";
     }
+} else if ($dataType == 'top3') {
+    if ($zone == 'Santos') {
+        $sql = "
+            SELECT RUA, COUNT(*) AS qtde 
+            FROM `solicitacao_de_demandas` 
+            GROUP BY RUA 
+            ORDER BY qtde DESC 
+            LIMIT 3;
+        ";
+    } else {
+        $sql = "
+            SELECT RUA, COUNT(*) AS qtde 
+            FROM `solicitacao_de_demandas` 
+            WHERE ZONAS = '" . $conn->real_escape_string($zone) . "' 
+            GROUP BY RUA 
+            ORDER BY qtde DESC 
+            LIMIT 3;
+        ";
+    }
 }
 
 $result = $conn->query($sql);

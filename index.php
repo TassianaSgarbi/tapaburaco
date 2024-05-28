@@ -73,11 +73,13 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-9" id="execucao_anual">
+    <div class="col-lg-9">
         <h3>Executadas no Ano</h3>
+        <div id="execucao_anual"></div>
     </div>
-    <div class="col-lg-3">
-        <?php include 'top3.php'; ?>
+
+    <div class="col-lg-3 shadow p-3 mb-5 bg-body-tertiary rounded">
+    <?php include 'top3.php'; ?>  
     </div>
 </div>
 
@@ -89,6 +91,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="graficos.js"></script>
+
+
+
 </body>
 
 </html>
