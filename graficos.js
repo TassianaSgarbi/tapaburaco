@@ -1,19 +1,20 @@
+// Variáveis para armazenar as instâncias dos gráficos
+let chartUltimos30Dias = null;
+let chartPercentual = null;
+let chartExecucaoAnual = null;
+
 // Funções para inicializar os gráficos
 async function atualizargrafico30(zona) {
     try { 
-        const response = await fetch('dados_grafico.php?zone='+ zona);
+        const response = await fetch('dados_grafico.php?zone=' + zona + '&dataType=30days');
         const data = await response.json();
 
-        // Inicializa as categorias de dias e a quantidade inicial como zero
-        const dias = Array();
-        // const quantidades = Array(31).fill(0);
-        const qtde = Array();
+        const dias = [];
+        const qtde = [];
 
-        // Preenche os dados de quantidade com base na resposta do PHP
         data.forEach(item => {
-            // quantidades[item.qtde - 1] = item.Quantidade;
             qtde.push(item.qtde);
-            dias.push(item.DATA);
+            dias.push(item.data);
         });
 
         var options = {
@@ -51,17 +52,17 @@ async function atualizargrafico30(zona) {
             xaxis: {
                 categories: dias,
                 title: {
-                    text: 'Dia'
+                    text: ""
                 }
             },
             yaxis: {
                 title: {
-                    text: 'Quantidade'
+                    text: 'Demandas'
                 },
                 tickAmount: "dataPoints"
             },
             fill: {
-                opacity: 1
+                opacity: 4
             },
             tooltip: {
                 y: {
@@ -72,26 +73,23 @@ async function atualizargrafico30(zona) {
             }
         };
 
-        var chart = new ApexCharts(document.querySelector("#executadas_ultimos_30_dias"), options);
-        chart.render();
+        if (chartUltimos30Dias) {
+            chartUltimos30Dias.destroy();
+        }
+        chartUltimos30Dias = new ApexCharts(document.querySelector("#executadas_ultimos_30_dias"), options);
+        chartUltimos30Dias.render();
     } catch (error) {
         console.error('Erro ao obter os dados do gráfico:', error);
     }
 }
 
-
 function grafico_percentual(totalDemandas, demandasAbertas, demandasVistoriadas, demandasExecutadas) {
-    var total = totalDemandas;
-    var abertas = demandasAbertas;
-    var vistoriadas = demandasVistoriadas;
-    var executadas = demandasExecutadas;
-
     var percentuais = [
-        (abertas / total) * 100,
-        (vistoriadas / total) * 100,
-        (executadas / total) * 100
+        (demandasAbertas / totalDemandas) * 100,
+        (demandasVistoriadas / totalDemandas) * 100,
+        (demandasExecutadas / totalDemandas) * 100
     ];
-    console.log(percentuais)
+
     var options = {
         series: percentuais,
         chart: {
@@ -114,72 +112,115 @@ function grafico_percentual(totalDemandas, demandasAbertas, demandasVistoriadas,
         }]
     };
 
-    var chart = new ApexCharts(document.querySelector("#grafico_percentual"), options);
-    chart.render();
+    if (chartPercentual) {
+        chartPercentual.destroy();
+    }
+    chartPercentual = new ApexCharts(document.querySelector("#grafico_percentual"), options);
+    chartPercentual.render();
 }
 
-function execucao_anual() {
-    var options = {
-        series: [{
-            name: '',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 80, 33]
-        }],
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
+async function execucao_anual(zona) {
+    try { 
+        const response = await fetch('dados_grafico.php?zone=' + zona + '&dataType=annual');
+        const data = await response.json();
+
+        const qtde = Array(12).fill(0);
+
+        data.forEach(item => {
+            qtde[item.mes - 1] = item.qtde;
+        });
+
+        var options = {
+            series: [{
+                name: 'Demandas Executadas',
+                data: qtde
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
             },
-        },
-        dataLabels: {
-            enabled: true,
-            formatter: function(val) {
-                return val.toFixed(0); // Mostra o valor como inteiro
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
             },
-            offsetY: -20,
-            style: {
-                fontSize: '12px',
-                colors: ["#304758"]
-            }
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            title: {
-                text: 'Mês'
-        }
-    },
-        yaxis: {
-            title: {
-                text: 'Quantidade'
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
+            dataLabels: {
+                enabled: true,
                 formatter: function(val) {
-                    return "" + val + "  demandas";
+                    return val.toFixed(0); // Mostra o valor como inteiro
+                },
+                offsetY: -20,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#304758"]
+                }
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                title: {
+                    text: ''
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Demandas'
+                }
+            },
+            fill: {
+                opacity: 4
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " demandas";
+                    }
                 }
             }
+        };
+
+        if (chartExecucaoAnual) {
+            chartExecucaoAnual.destroy();
         }
-    };
-    var chart = new ApexCharts(document.querySelector("#execucao_anual"), options);
-    chart.render();
+        chartExecucaoAnual = new ApexCharts(document.querySelector("#execucao_anual"), options);
+        chartExecucaoAnual.render();
+    } catch (error) {
+        console.error('Erro ao obter os dados do gráfico:', error);
+    }
 }
 
-
-// Inicialize os gráficos quando o documento estiver carregado
-document.addEventListener('DOMContentLoaded', function () {
-    // atualizargrafico30();
-    execucao_anual();
+document.addEventListener('DOMContentLoaded', function() {
+    fetchData('Santos');
 });
+
+function fetchData(zone) {
+    document.getElementById('loading').style.display = 'block'; // Mostrar loading
+
+    fetch('fetchData.php?zone=' + encodeURIComponent(zone))
+        .then(response => response.json())
+        .then(data => {
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none'; // Ocultar loading
+            }, 2000);
+            
+            document.getElementById('totalDemandas').innerText = data.totalDemandas;
+            document.getElementById('demandasAbertas').innerText = data.demandasAbertas;
+            document.getElementById('demandasVistoriadas').innerText = data.demandasVistoriadas;
+            document.getElementById('demandasExecutadas').innerText = data.demandasExecutadas;
+            document.getElementById('alert').innerHTML = zone;
+
+            atualizargrafico30(zone);
+            grafico_percentual(data.totalDemandas, data.demandasAbertas, data.demandasVistoriadas, data.demandasExecutadas);
+            execucao_anual(zone);
+        })
+        .catch(error => {
+            document.getElementById('loading').style.display = 'none';
+            console.error('Error:', error);
+        });
+}

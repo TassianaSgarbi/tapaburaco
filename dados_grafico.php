@@ -10,28 +10,22 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-if ($_GET['zone'] == 'Santos') {
-    $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY DATA;";
+$dataType = $_GET['dataType'];
+$zone = $_GET['zone'];
 
-} else if ($_GET['zone'] == 'Zona da Orla e intermediária'){
-    $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY ) AND ZONAS = 'Zona da Orla e intermediária' GROUP BY DATA;";
-
-} else if ($_GET['zone'] == 'Região Central Histórica'){
-    $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY ) AND ZONAS = 'Região Central Histórica' GROUP BY DATA;";
-
-}  else if ($_GET['zone'] == 'Zona dos Morros'){
-    $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY ) AND ZONAS = 'Zona dos Morros' GROUP BY DATA;";
-} 
-
-else if ($_GET['zone'] == 'Zona Noroeste'){
-    $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY ) AND ZONAS = 'Zona Noroeste' GROUP BY DATA;";
-
-} else if ($_GET['zone'] == 'Área Continental'){
-    $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY ) AND ZONAS = 'Área Continental' GROUP BY DATA;";
+if ($dataType == '30days') {
+    if ($zone == 'Santos') {
+        $sql = "SELECT COUNT(*) AS qtde, DATE_FORMAT(DATA, '%d/%m/%Y') AS data FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY data;";
+    } else {
+        $sql = "SELECT COUNT(*) AS qtde, DATE_FORMAT(DATA, '%d/%m/%Y') AS data FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND ZONAS = '" . $conn->real_escape_string($zone) . "' GROUP BY data;";
+    }
+} else if ($dataType == 'annual') {
+    if ($zone == 'Santos') {
+        $sql = "SELECT COUNT(*) AS qtde, MONTH(DATA) AS mes FROM `solicitacao_de_demandas` WHERE YEAR(DATA) = YEAR(CURDATE()) GROUP BY mes;";
+    } else {
+        $sql = "SELECT COUNT(*) AS qtde, MONTH(DATA) AS mes FROM `solicitacao_de_demandas` WHERE YEAR(DATA) = YEAR(CURDATE()) AND ZONAS = '" . $conn->real_escape_string($zone) . "' GROUP BY mes;";
+    }
 }
-
-// Seleciona o número de demandas executadas por dia nos últimos 30 dias
-// $sql = "SELECT COUNT(*) AS qtde, DATA FROM `solicitacao_de_demandas` WHERE DATA > DATE_SUB(CURDATE(), INTERVAL 30 DAY) GROUP BY DATA;";
 
 $result = $conn->query($sql);
 
@@ -44,3 +38,4 @@ $conn->close();
 
 header('Content-Type: application/json');
 echo json_encode($data);
+?>
