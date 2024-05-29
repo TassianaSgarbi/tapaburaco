@@ -10,11 +10,13 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-$sql = "SELECT RUA, COUNT(*) AS qtde 
-        FROM `solicitacao_de_demandas` 
-        GROUP BY RUA 
-        ORDER BY qtde DESC 
-        LIMIT 3";
+$sql = "SELECT Rua, Zonas, COUNT(*) AS Total_Demandas_Executadas
+FROM Solicitacao_de_Demandas
+WHERE Status_Demanda = 'Demandas Executadas'
+GROUP BY Rua, Zonas
+ORDER BY Total_Demandas_Executadas DESC
+LIMIT 3";
+
 
 $result = $conn->query($sql);
 
@@ -30,7 +32,9 @@ if ($result->num_rows > 0) {
         } elseif ($i == 3) {
             echo '<span class="terceirolugar">' . $i . 'º Lugar</span>';
         }
-        echo '<h6>' . $row["RUA"] . '</h6>';
+        echo '<h6>' . $row["Rua"] . '</h6>';
+        echo '<p>Zona: ' . $row["Zonas"] . '</p>';
+        echo '<p>Total de Demandas Executadas: ' . $row["Total_Demandas_Executadas"] . '</p>';
         echo '</div>';
         echo '</div>';
         $i++;

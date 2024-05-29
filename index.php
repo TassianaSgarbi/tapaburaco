@@ -79,7 +79,7 @@
     </div>
 
     <div class="col-lg-3 shadow p-3 mb-5 bg-body-tertiary rounded">
-            <h3 class="text-center">Ruas com mais Demandas Executadas</h3>
+            <h3 class="text-center">TOP3 - Demandas Executadas</h3>
     <?php include 'top3.php'; ?>  
     
     </div>
@@ -93,8 +93,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="graficos.js"></script>
-
-
 
 </body>
 
